@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_native_admob/native_admob_controller.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -352,6 +353,15 @@ class AllPageController extends GetxController {
     final fileNoun = File('${dir.path}/noun.json');
     final fileKana = File('${dir.path}/kana.json');
 
+    final String verb =
+        await rootBundle.loadString('assets/word_list/verb.json');
+    final String adjective =
+        await rootBundle.loadString('assets/word_list/verb.json');
+    final String noun =
+        await rootBundle.loadString('assets/word_list/verb.json');
+    final String kana =
+        await rootBundle.loadString('assets/word_list/verb.json');
+
     if (fileVerb.existsSync() ||
         fileAdjective.existsSync() ||
         fileAdjective.existsSync() ||
@@ -375,7 +385,24 @@ class AllPageController extends GetxController {
       quizWordList.value = jsonDecode(fileVerb.readAsStringSync())['N5'];
       rand.value = Random().nextInt(quizWordList.length);
     } else {
-      downloadAndUpdateWord();
+      dictionaryWordList.value = jsonDecode(verb)['N5'] +
+          jsonDecode(verb)['N4'] +
+          jsonDecode(adjective)['N5'] +
+          jsonDecode(adjective)['N4'] +
+          jsonDecode(noun)['N5'] +
+          jsonDecode(noun)['N4'];
+      foundWord.value = dictionaryWordList;
+      foundWord.sort(
+        (a, b) => a['KanjiCasualPositive'].toLowerCase().compareTo(
+              b['KanjiCasualPositive'].toLowerCase(),
+            ),
+      );
+
+      dictionaryKanaList.value = jsonDecode(kana);
+
+      quizWordList.value = jsonDecode(verb)['N5'];
+      rand.value = Random().nextInt(quizWordList.length);
+      // downloadAndUpdateWord();
     }
   }
 
