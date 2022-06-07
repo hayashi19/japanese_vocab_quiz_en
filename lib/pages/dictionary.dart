@@ -1,10 +1,11 @@
+// ignore_for_file: unused_local_variable
+
 import 'package:flutter/material.dart';
-import 'package:flutter_native_admob/flutter_native_admob.dart';
-import 'package:flutter_native_admob/native_admob_options.dart';
 import 'package:get/get.dart';
 
 // Import files
 import 'package:japanese_vocab_quiz_en/controller/controller.dart';
+import 'package:japanese_vocab_quiz_en/pages/home.dart';
 
 class DictionaryPage extends StatelessWidget {
   const DictionaryPage({Key? key}) : super(key: key);
@@ -230,6 +231,10 @@ class ListPage extends StatelessWidget {
                     height: 36,
                     thickness: 2,
                   ),
+                  ADS(ad: Get.put(AllPageController()).dictionary_banner),
+                  SizedBox(
+                    height: 8,
+                  ),
                   // Casual form
                   const Text(
                     "Casual Conjugation (Everyday)",
@@ -414,84 +419,6 @@ class ListPage extends StatelessWidget {
             const SizedBox(height: 16),
             // const DictionaryAdExtra(),
           ],
-        ),
-      ),
-    );
-  }
-}
-
-class DictionaryAd1 extends StatelessWidget {
-  const DictionaryAd1({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final AllPageController allPageController = Get.find();
-    return Container(
-      height: 65,
-      color: Colors.blueGrey[300],
-      padding: const EdgeInsets.symmetric(horizontal: 8),
-      child: Obx(
-        () => NativeAdmob(
-          error: const Center(child: Text("Ads not available")),
-          adUnitID: allPageController.dictionaryBanner1.value,
-          controller: allPageController.dictoinaryAdsController,
-          type: NativeAdmobType.banner,
-          options: const NativeAdmobOptions(
-            headlineTextStyle: NativeTextStyle(
-              fontSize: 6,
-              color: Colors.white,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class DictionaryAd2 extends StatelessWidget {
-  const DictionaryAd2({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final AllPageController allPageController = Get.find();
-    return Container(
-      height: 65,
-      color: Colors.blueGrey[300],
-      padding: const EdgeInsets.symmetric(horizontal: 8),
-      child: Obx(
-        () => NativeAdmob(
-          error: const Center(child: Text("Ads not available")),
-          adUnitID: allPageController.dictionaryBanner2.value,
-          controller: allPageController.dictoinaryAdsController,
-          type: NativeAdmobType.banner,
-        ),
-      ),
-    );
-  }
-}
-
-class DictionaryAdExtra extends StatelessWidget {
-  const DictionaryAdExtra({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final AllPageController allPageController = Get.find();
-    return Container(
-      height: 65,
-      color: Colors.blueGrey[300],
-      padding: const EdgeInsets.symmetric(horizontal: 8),
-      child: Obx(
-        () => NativeAdmob(
-          error: const Center(child: Text("Ads not available")),
-          adUnitID: allPageController.dictionaryBannerExtra.value,
-          controller: allPageController.dictoinaryAdsController,
-          type: NativeAdmobType.banner,
-          options: const NativeAdmobOptions(
-            headlineTextStyle: NativeTextStyle(
-              fontSize: 6,
-              color: Colors.white,
-            ),
-          ),
         ),
       ),
     );

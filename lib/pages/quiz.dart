@@ -1,6 +1,6 @@
+// ignore_for_file: unused_local_variable, unrelated_type_equality_checks, deprecated_member_use
+
 import 'package:flutter/material.dart';
-import 'package:flutter_native_admob/flutter_native_admob.dart';
-import 'package:flutter_native_admob/native_admob_options.dart';
 import 'package:get/get.dart';
 
 import 'package:japanese_vocab_quiz_en/controller/controller.dart';
@@ -477,131 +477,139 @@ class QuizHint extends StatelessWidget {
     return Align(
       alignment: Alignment.bottomRight,
       child: FlatButton.icon(
-        onPressed: () => showModalBottomSheet<void>(
-          context: context,
-          builder: (BuildContext context) {
-            if (allPageController.wordTypeValue == "Hiragana" ||
-                allPageController.wordTypeValue == "Katakana") {
-              return Container(
-                height: 150,
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  children: <Widget>[
-                    Card(
-                      elevation: 4,
-                      child: Padding(
-                        padding: const EdgeInsets.all(14),
-                        child: Obx(
-                          () => Text(
-                            "${allPageController.wordTypeValue == "Hiragana" ? KanaKit().toHiragana(allPageController.quizWordList[allPageController.rand.value]["Spell"]) : KanaKit().toKatakana(allPageController.quizWordList[allPageController.rand.value]["Spell"])} [${allPageController.quizWordList[allPageController.rand.value]["Spell"]}]",
-                            softWrap: true,
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w400,
+        onPressed: () {
+          showModalBottomSheet<void>(
+            context: context,
+            builder: (BuildContext context) {
+              if (allPageController.wordTypeValue == "Hiragana" ||
+                  allPageController.wordTypeValue == "Katakana") {
+                return Container(
+                  height: 150,
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    children: <Widget>[
+                      Card(
+                        elevation: 4,
+                        child: Padding(
+                          padding: const EdgeInsets.all(14),
+                          child: Obx(
+                            () => Text(
+                              "${allPageController.wordTypeValue == "Hiragana" ? const KanaKit().toHiragana(allPageController.quizWordList[allPageController.rand.value]["Spell"]) : const KanaKit().toKatakana(allPageController.quizWordList[allPageController.rand.value]["Spell"])} [${allPageController.quizWordList[allPageController.rand.value]["Spell"]}]",
+                              softWrap: true,
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w400,
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                    ElevatedButton(
-                      child: const Text("Close"),
-                      onPressed: () => Navigator.pop(context),
-                    )
-                  ],
-                ),
-              );
-            } else {
-              return Container(
-                height: 500,
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  children: <Widget>[
-                    Expanded(
-                      child: ListView(
-                        children: <Widget>[
-                          // Content inside the bottom sheet
-                          Card(
-                            elevation: 4,
-                            child: Padding(
-                              padding: const EdgeInsets.all(14),
-                              child: Obx(
-                                () => Text(
-                                  "${allPageController.quizWordList[allPageController.rand.value]["KanjiCasualPositive"]} (${allPageController.quizWordList[allPageController.rand.value]["RomajiCasualPositive"]})",
-                                  softWrap: true,
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 42,
-                            child: Obx(
-                              () => ListView.builder(
-                                scrollDirection: Axis.horizontal,
-                                itemCount: (allPageController.quizWordList[
-                                            allPageController.rand.value]
-                                        ["EnglishCasualPositive"])
-                                    .toString()
-                                    .split("; ")
-                                    .length,
-                                itemBuilder: (context, index) => Card(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Obx(
-                                      () => Text((allPageController
-                                                      .quizWordList[
-                                                  allPageController.rand.value]
-                                              ["EnglishCasualPositive"])
-                                          .toString()
-                                          .split("; ")[index]),
+                      ElevatedButton(
+                        child: const Text("Close"),
+                        onPressed: () => Navigator.pop(context),
+                      )
+                    ],
+                  ),
+                );
+              } else {
+                return Container(
+                  height: 500,
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    children: <Widget>[
+                      Expanded(
+                        child: ListView(
+                          children: <Widget>[
+                            // Content inside the bottom sheet
+                            Card(
+                              elevation: 4,
+                              child: Padding(
+                                padding: const EdgeInsets.all(14),
+                                child: Obx(
+                                  () => Text(
+                                    "${allPageController.quizWordList[allPageController.rand.value]["KanjiCasualPositive"]} (${allPageController.quizWordList[allPageController.rand.value]["RomajiCasualPositive"]})",
+                                    softWrap: true,
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w400,
                                     ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                          const SizedBox(height: 24),
-                          const Text(
-                            "Conjugation:",
-                            style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.w400),
-                          ),
-                          const SizedBox(height: 8),
-                          Obx(() => Text(
-                              "JPLT Level: ${allPageController.quizWordList[allPageController.rand.value]["Level"]}")),
-                          Obx(() => Text(
-                              "Type ${allPageController.wordTypeValue}: ${allPageController.quizWordList[allPageController.rand.value]["WordType"]}")),
-                          const SizedBox(height: 8),
-                          Obx(() => Text(
-                              "Negative Casual: ${allPageController.quizWordList[allPageController.rand.value]["KanjiCasualNegative"]} (${allPageController.quizWordList[allPageController.rand.value]["RomajiCasualNegative"]})")),
-                          Obx(() => Text(
-                              "Casual Past: ${allPageController.quizWordList[allPageController.rand.value]["KanjiCasualPast"]} (${allPageController.quizWordList[allPageController.rand.value]["RomajiCasualPast"]})")),
-                          const SizedBox(height: 8),
-                          Obx(() => Text(
-                              "Positive Polite: ${allPageController.quizWordList[allPageController.rand.value]["KanjiPolitePositive"]} (${allPageController.quizWordList[allPageController.rand.value]["RomajiPolitePositive"]})")),
-                          Obx(() => Text(
-                              "Negative Polite: ${allPageController.quizWordList[allPageController.rand.value]["KanjiPoliteNegative"]} (${allPageController.quizWordList[allPageController.rand.value]["RomajiPoliteNegative"]})")),
-                          Obx(() => Text(
-                              "Polite Past: ${allPageController.quizWordList[allPageController.rand.value]["KanjiPolitePast"]} (${allPageController.quizWordList[allPageController.rand.value]["RomajiPolitePast"]})")),
-                        ],
+                            SizedBox(
+                              height: 42,
+                              child: Obx(
+                                () => ListView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: (allPageController.quizWordList[
+                                              allPageController.rand.value]
+                                          ["EnglishCasualPositive"])
+                                      .toString()
+                                      .split("; ")
+                                      .length,
+                                  itemBuilder: (context, index) => Card(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Obx(
+                                        () => Text(
+                                            (allPageController.quizWordList[
+                                                        allPageController
+                                                            .rand.value]
+                                                    ["EnglishCasualPositive"])
+                                                .toString()
+                                                .split("; ")[index]),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 24),
+                            const Text(
+                              "Conjugation:",
+                              style: TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.w400),
+                            ),
+                            const SizedBox(height: 8),
+                            Obx(() => Text(
+                                "JPLT Level: ${allPageController.quizWordList[allPageController.rand.value]["Level"]}")),
+                            Obx(() => Text(
+                                "Type ${allPageController.wordTypeValue}: ${allPageController.quizWordList[allPageController.rand.value]["WordType"]}")),
+                            const SizedBox(height: 8),
+                            Obx(() => Text(
+                                "Negative Casual: ${allPageController.quizWordList[allPageController.rand.value]["KanjiCasualNegative"]} (${allPageController.quizWordList[allPageController.rand.value]["RomajiCasualNegative"]})")),
+                            Obx(() => Text(
+                                "Casual Past: ${allPageController.quizWordList[allPageController.rand.value]["KanjiCasualPast"]} (${allPageController.quizWordList[allPageController.rand.value]["RomajiCasualPast"]})")),
+                            const SizedBox(height: 8),
+                            Obx(() => Text(
+                                "Positive Polite: ${allPageController.quizWordList[allPageController.rand.value]["KanjiPolitePositive"]} (${allPageController.quizWordList[allPageController.rand.value]["RomajiPolitePositive"]})")),
+                            Obx(() => Text(
+                                "Negative Polite: ${allPageController.quizWordList[allPageController.rand.value]["KanjiPoliteNegative"]} (${allPageController.quizWordList[allPageController.rand.value]["RomajiPoliteNegative"]})")),
+                            Obx(() => Text(
+                                "Polite Past: ${allPageController.quizWordList[allPageController.rand.value]["KanjiPolitePast"]} (${allPageController.quizWordList[allPageController.rand.value]["RomajiPolitePast"]})")),
+                          ],
+                        ),
                       ),
-                    ),
-                    // Close button
-                    ElevatedButton(
-                      child: const Text("Close"),
-                      onPressed: () => Navigator.pop(context),
-                    )
-                  ],
-                ),
-              );
-            }
-          },
-        ),
+                      // Close button
+                      ElevatedButton(
+                        child: const Text("Close"),
+                        onPressed: () => Navigator.pop(context),
+                      )
+                    ],
+                  ),
+                );
+              }
+            },
+          );
+          allPageController.adsCountDown++;
+          print(allPageController.adsCountDown.value);
+          if (allPageController.adsCountDown.value % 5 == 0) {
+            allPageController.loadInterstitialAd();
+          }
+        },
         icon: const Icon(Icons.help),
         label: const Padding(
           padding: EdgeInsets.all(16.0),
@@ -611,62 +619,6 @@ class QuizHint extends StatelessWidget {
         textColor: Colors.white,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(50),
-        ),
-      ),
-    );
-  }
-}
-
-class QuizAd1 extends StatelessWidget {
-  const QuizAd1({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final AllPageController allPageController = Get.find();
-    return Container(
-      height: 66,
-      color: Colors.blueGrey[300],
-      padding: const EdgeInsets.symmetric(horizontal: 8),
-      child: Obx(
-        () => NativeAdmob(
-          error: const Center(child: Text("Ads not available")),
-          adUnitID: allPageController.quizBanner1.value,
-          controller: allPageController.quizAdsController,
-          type: NativeAdmobType.full,
-          options: const NativeAdmobOptions(
-            headlineTextStyle: NativeTextStyle(
-              fontSize: 6,
-              color: Colors.white,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class QuizAd2 extends StatelessWidget {
-  const QuizAd2({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final AllPageController allPageController = Get.find();
-    return Container(
-      height: 66,
-      color: Colors.blueGrey[300],
-      padding: const EdgeInsets.symmetric(horizontal: 8),
-      child: Obx(
-        () => NativeAdmob(
-          error: const Center(child: Text("Ads not available")),
-          adUnitID: allPageController.quizBanner2.value,
-          controller: allPageController.quizAdsController,
-          type: NativeAdmobType.banner,
-          options: const NativeAdmobOptions(
-            headlineTextStyle: NativeTextStyle(
-              fontSize: 6,
-              color: Colors.white,
-            ),
-          ),
         ),
       ),
     );

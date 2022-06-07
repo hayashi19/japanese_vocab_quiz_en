@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 // Import Files
 import 'package:japanese_vocab_quiz_en/controller/controller.dart';
@@ -21,24 +22,31 @@ class MobileHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    HomePageController homePageController = Get.put(HomePageController());
+    AllPageController allPageController = Get.put(AllPageController());
     return Scaffold(
-      body: PageView(
-        onPageChanged: (index) => homePageController.changeIndex(index),
-        controller: homePageController.pageViewController,
-        children: const <Widget>[
-          QuizPage(),
-          DictionaryPage(),
-          KanaPage(),
-          SettingPage(),
+      body: Column(
+        children: <Widget>[
+          Expanded(
+            child: PageView(
+              onPageChanged: (index) => allPageController.changeIndex(index),
+              controller: allPageController.pageViewController,
+              children: const <Widget>[
+                QuizPage(),
+                DictionaryPage(),
+                KanaPage(),
+                SettingPage(),
+              ],
+            ),
+          ),
+          ADS(ad: allPageController.allBanner)
         ],
       ),
 
       // Bot nav bar contain icon of pages
       bottomNavigationBar: Obx(
         () => BottomNavigationBar(
-          currentIndex: homePageController.currentIndex.value,
-          onTap: (index) => homePageController.pageViewController.animateToPage(
+          currentIndex: allPageController.currentIndex.value,
+          onTap: (index) => allPageController.pageViewController.animateToPage(
             index,
             duration: const Duration(
               milliseconds: 450,
@@ -83,6 +91,22 @@ class DesktopHomePage extends StatelessWidget {
       body: Center(
         child: Text("Hello, Desktop!"),
       ),
+    );
+  }
+}
+
+// ignore: must_be_immutable
+class ADS extends StatelessWidget {
+  AdWithView ad;
+  ADS({Key? key, required this.ad}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      alignment: Alignment.center,
+      width: AdSize.banner.width.toDouble(),
+      height: AdSize.banner.height.toDouble(),
+      child: AdWidget(ad: ad),
     );
   }
 }

@@ -1,8 +1,8 @@
+// ignore_for_file: unused_local_variable
+
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
-import 'package:flutter_native_admob/flutter_native_admob.dart';
-import 'package:flutter_native_admob/native_admob_options.dart';
 import 'package:get/get.dart';
 import 'package:japanese_vocab_quiz_en/controller/controller.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -13,6 +13,8 @@ class SettingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     AllPageController allPageController = Get.put(AllPageController());
+    // allPageController.loadInterstitialAd();
+    print("BISA BISA SETTING PAGE ==================================");
     return Container(
       margin: const EdgeInsets.all(8),
       child: ListView(
@@ -206,7 +208,18 @@ class SettingWebsiteVersion extends StatelessWidget {
     final AllPageController allPageController = Get.find();
     return ElevatedButton.icon(
       // ignore: deprecated_member_use
-      onPressed: () => launch(allPageController.websiteVersion.string),
+      onPressed: () {
+        launch(allPageController.websiteVersion.string);
+        if (allPageController.adIsLoaded.value) {
+          allPageController.interstitialAd.show();
+        } else {
+          allPageController.loadInterstitialAd();
+          if (allPageController.adIsLoaded.value) {
+            allPageController.interstitialAd.show();
+          }
+        }
+      },
+
       icon: const Icon(Icons.web),
       label: const Padding(
         padding: EdgeInsets.all(16),
@@ -300,62 +313,6 @@ class AboutAppTrick extends StatelessWidget {
   }
 }
 
-class SettingAd1 extends StatelessWidget {
-  const SettingAd1({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final AllPageController allPageController = Get.find();
-    return Container(
-      height: 65,
-      color: Colors.blueGrey[300],
-      padding: const EdgeInsets.symmetric(horizontal: 8),
-      child: Obx(
-        () => NativeAdmob(
-          error: const Center(child: Text("Ads not available")),
-          adUnitID: allPageController.settingBanner1.value,
-          controller: allPageController.settingAdsController,
-          type: NativeAdmobType.banner,
-          options: const NativeAdmobOptions(
-            headlineTextStyle: NativeTextStyle(
-              fontSize: 6,
-              color: Colors.white,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class SettingAd2 extends StatelessWidget {
-  const SettingAd2({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final AllPageController allPageController = Get.find();
-    return Container(
-      height: 65,
-      color: Colors.blueGrey[300],
-      padding: const EdgeInsets.symmetric(horizontal: 8),
-      child: Obx(
-        () => NativeAdmob(
-          error: const Center(child: Text("Ads not available")),
-          adUnitID: allPageController.settingBanner2.value,
-          controller: allPageController.settingAdsController,
-          type: NativeAdmobType.banner,
-          options: const NativeAdmobOptions(
-            headlineTextStyle: NativeTextStyle(
-              fontSize: 6,
-              color: Colors.white,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
 class SettingThemeButton extends StatelessWidget {
   const SettingThemeButton({Key? key}) : super(key: key);
 
@@ -400,7 +357,10 @@ class SettingDownloadFileButton extends StatelessWidget {
           child: Text("Update Vocabulary"),
         ),
       ),
-      onPressed: () => allPageController.downloadAndUpdateWord(),
+      onPressed: () {
+        allPageController.loadInterstitialAd();
+        allPageController.downloadAndUpdateWord();
+      },
     );
   }
 }

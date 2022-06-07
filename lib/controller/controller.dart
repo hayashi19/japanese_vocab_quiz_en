@@ -1,13 +1,14 @@
+// ignore_for_file: deprecated_member_use, avoid_print
+
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_native_admob/native_admob_controller.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:kana_kit/kana_kit.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -106,24 +107,12 @@ class ThemeService {
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////// THEME
 
-//////////////////////////////////////////////////////////////////////////////////////////////////// HOMEPAGE CONTROLLER
-class HomePageController extends GetxController {
+class AllPageController extends GetxController {
   var currentIndex = 0.obs;
   late PageController pageViewController;
 
   changeIndex(index) => currentIndex.value = index;
 
-  @override
-  void onInit() {
-    // ignore: todo
-    // TODO: implement onInit
-    super.onInit();
-    pageViewController = PageController(initialPage: currentIndex.value);
-  }
-}
-//////////////////////////////////////////////////////////////////////////////////////////////////// HOMEPAGE CONTROLLER
-
-class AllPageController extends GetxController {
   // QUIZ ////////////////////////////////////////////////////////////////////////////////////////////////
   // SCORE SECTION
   var trueScore = 0.obs;
@@ -137,6 +126,8 @@ class AllPageController extends GetxController {
   var englishVisibility = true.obs;
   var quizWordList = [].obs;
   var rand = 0.obs;
+
+  var adsCountDown = 0.obs;
 
   // SETTING SECTION
   var answerTypeItem = ['Kanji', 'Romaji', 'English'].obs;
@@ -168,34 +159,75 @@ class AllPageController extends GetxController {
   // function to check which the wordtype is being used by user
   void changeWordType(wordType, levelType) async {
     final dir = await getApplicationDocumentsDirectory();
-    switch (wordType) {
-      case "Verb":
-        final fileVerb = File('${dir.path}/verb.json');
-        quizWordList.value = jsonDecode(fileVerb.readAsStringSync())[levelType];
-        randNum();
-        break;
-      case "Adjective":
-        final fileAdjective = File('${dir.path}/adjective.json');
-        quizWordList.value =
-            jsonDecode(fileAdjective.readAsStringSync())[levelType];
-        randNum();
-        break;
-      case "Noun":
-        final fileNoun = File('${dir.path}/noun.json');
-        quizWordList.value = jsonDecode(fileNoun.readAsStringSync())[levelType];
-        randNum();
-        break;
-      case "Hiragana":
-        final fileKana = File('${dir.path}/kana.json');
-        quizWordList.value = jsonDecode(fileKana.readAsStringSync());
-        randNum();
-        break;
-      case "Katakana":
-        final fileKana = File('${dir.path}/kana.json');
-        quizWordList.value = jsonDecode(fileKana.readAsStringSync());
-        randNum();
-        break;
-      default:
+
+    final fileVerb = File('${dir.path}/verb.json');
+    final fileAdjective = File('${dir.path}/adjective.json');
+    final fileNoun = File('${dir.path}/noun.json');
+    final fileKana = File('${dir.path}/kana.json');
+
+    final String verb =
+        await rootBundle.loadString('assets/word_list/verb.json');
+    final String adjective =
+        await rootBundle.loadString('assets/word_list/adjective.json');
+    final String noun =
+        await rootBundle.loadString('assets/word_list/noun.json');
+    final String kana =
+        await rootBundle.loadString('assets/word_list/kana.json');
+
+    if (fileVerb.existsSync() ||
+        fileAdjective.existsSync() ||
+        fileNoun.existsSync() ||
+        fileKana.existsSync()) {
+      switch (wordType) {
+        case "Verb":
+          quizWordList.value =
+              jsonDecode(fileVerb.readAsStringSync())[levelType];
+          randNum();
+          break;
+        case "Adjective":
+          quizWordList.value =
+              jsonDecode(fileAdjective.readAsStringSync())[levelType];
+          randNum();
+          break;
+        case "Noun":
+          quizWordList.value =
+              jsonDecode(fileNoun.readAsStringSync())[levelType];
+          randNum();
+          break;
+        case "Hiragana":
+          quizWordList.value = jsonDecode(fileKana.readAsStringSync());
+          randNum();
+          break;
+        case "Katakana":
+          quizWordList.value = jsonDecode(fileKana.readAsStringSync());
+          randNum();
+          break;
+        default:
+      }
+    } else {
+      switch (wordType) {
+        case "Verb":
+          quizWordList.value = jsonDecode(verb)[levelType];
+          randNum();
+          break;
+        case "Adjective":
+          quizWordList.value = jsonDecode(adjective)[levelType];
+          randNum();
+          break;
+        case "Noun":
+          quizWordList.value = jsonDecode(noun)[levelType];
+          randNum();
+          break;
+        case "Hiragana":
+          quizWordList.value = jsonDecode(kana);
+          randNum();
+          break;
+        case "Katakana":
+          quizWordList.value = jsonDecode(kana);
+          randNum();
+          break;
+        default:
+      }
     }
   }
 
@@ -282,11 +314,11 @@ class AllPageController extends GetxController {
           }
           break;
         } else {
-          if ((submitTextfield.text.contains(
-                      KanaKit().toHiragana(quizWordList[rand.value]["Spell"])) &
+          if ((submitTextfield.text.contains(const KanaKit()
+                      .toHiragana(quizWordList[rand.value]["Spell"])) &
                   wordType.contains("Hiragana")) ||
-              (submitTextfield.text.contains(
-                      KanaKit().toKatakana(quizWordList[rand.value]["Spell"])) &
+              (submitTextfield.text.contains(const KanaKit()
+                      .toKatakana(quizWordList[rand.value]["Spell"])) &
                   wordType.contains("Katakana"))) {
             answerTrue();
           } else {
@@ -356,11 +388,11 @@ class AllPageController extends GetxController {
     final String verb =
         await rootBundle.loadString('assets/word_list/verb.json');
     final String adjective =
-        await rootBundle.loadString('assets/word_list/verb.json');
+        await rootBundle.loadString('assets/word_list/adjective.json');
     final String noun =
-        await rootBundle.loadString('assets/word_list/verb.json');
+        await rootBundle.loadString('assets/word_list/noun.json');
     final String kana =
-        await rootBundle.loadString('assets/word_list/verb.json');
+        await rootBundle.loadString('assets/word_list/kana.json');
 
     if (fileVerb.existsSync() ||
         fileAdjective.existsSync() ||
@@ -384,6 +416,7 @@ class AllPageController extends GetxController {
 
       quizWordList.value = jsonDecode(fileVerb.readAsStringSync())['N5'];
       rand.value = Random().nextInt(quizWordList.length);
+      print("ONLINE ONLINE ONLINE ONLINE ONLINE ONLINE ONLINE ONLINE");
     } else {
       dictionaryWordList.value = jsonDecode(verb)['N5'] +
           jsonDecode(verb)['N4'] +
@@ -402,6 +435,7 @@ class AllPageController extends GetxController {
 
       quizWordList.value = jsonDecode(verb)['N5'];
       rand.value = Random().nextInt(quizWordList.length);
+      print("OFFLINE OFFLINE OFFLINE OFFLINE OFFLINE OFFLINE OFFLINE");
       // downloadAndUpdateWord();
     }
   }
@@ -434,6 +468,9 @@ class AllPageController extends GetxController {
   // SETTING ////////////////////////////////////////////////////////////////////////////////////////////////
   // Set function to save word list verb, adjective and noun to be downloaded to local app directory
   Future downloadAndUpdateWord() async {
+    // loadInterstitialAd();
+    Get.snackbar("Download files",
+        "Please wait a moment while the file is being downloaded");
     final dir = await getApplicationDocumentsDirectory();
 
     // 1) set the reference form firebase storage file location
@@ -493,27 +530,67 @@ class AllPageController extends GetxController {
   // SETTING ////////////////////////////////////////////////////////////////////////////////////////////////
 
   // ADS ////////////////////////////////////////////////////////////////////////////////////////////////
-  // QUIZ ADS
-  var quizBanner1 = 'ca-app-pub-3940256099942544/2247696110'.obs;
-  var quizBanner2 = 'ca-app-pub-3940256099942544/2247696110'.obs;
-  var quizAdsController = NativeAdmobController();
+  final BannerAd allBanner = BannerAd(
+    adUnitId: BannerAd.testAdUnitId,
+    size: AdSize.banner,
+    request: const AdRequest(),
+    listener: const BannerAdListener(),
+  );
 
-  // DICTIONARY ADS
-  var dictionaryBanner1 = 'ca-app-pub-3940256099942544/2247696110'.obs;
-  var dictionaryBanner2 = 'ca-app-pub-3940256099942544/2247696110'.obs;
-  var dictionaryBannerExtra = 'ca-app-pub-3940256099942544/2247696110'.obs;
-  var dictoinaryAdsController = NativeAdmobController();
+  final BannerAd dictionary_banner = BannerAd(
+    adUnitId: BannerAd.testAdUnitId,
+    size: AdSize.banner,
+    request: const AdRequest(),
+    listener: const BannerAdListener(),
+  );
 
-  // SETTING ADS
-  var settingBanner1 = 'ca-app-pub-3940256099942544/2247696110'.obs;
-  var settingBanner2 = 'ca-app-pub-3940256099942544/2247696110'.obs;
-  var settingAdsController = NativeAdmobController();
+  late InterstitialAd interstitialAd;
+  var adIsLoaded = false.obs;
+
+  void loadInterstitialAd() async {
+    if (adIsLoaded.value) {
+      await interstitialAd.show();
+    }
+    InterstitialAd.load(
+      adUnitId: InterstitialAd.testAdUnitId,
+      request: const AdRequest(),
+      adLoadCallback: InterstitialAdLoadCallback(
+        onAdLoaded: (InterstitialAd ad) {
+          // Keep a reference to the ad so you can show it later.
+          interstitialAd = ad;
+          adIsLoaded.value = true;
+          print("ADS LOADED ADS LOADED ADS LOADED ADS LOADED ADS LOADED");
+
+          interstitialAd.fullScreenContentCallback =
+              FullScreenContentCallback(onAdDismissedFullScreenContent: (ad) {
+            adIsLoaded.value = false;
+            interstitialAd.dispose();
+            loadInterstitialAd();
+          }, onAdFailedToShowFullScreenContent: (ad, error) {
+            adIsLoaded.value = false;
+            interstitialAd.dispose();
+          });
+        },
+        onAdFailedToLoad: (LoadAdError error) {
+          print('InterstitialAd failed to load: $error');
+        },
+      ),
+    );
+  }
   // ADS ////////////////////////////////////////////////////////////////////////////////////////////////
 
   @override
   void onInit() async {
+    // ignore: todo
     // TODO: implement onInit
     super.onInit();
+
+    pageViewController = PageController(initialPage: currentIndex.value);
     getList();
+
+    allBanner.load();
+    dictionary_banner.load();
+
+    loadInterstitialAd();
   }
 }

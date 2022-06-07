@@ -1,3 +1,5 @@
+// ignore_for_file: unused_local_variable
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:japanese_vocab_quiz_en/controller/controller.dart';
@@ -27,81 +29,58 @@ class ListKana extends StatelessWidget {
         itemCount: allPageController.dictionaryKanaList.length,
         separatorBuilder: (BuildContext context, int index) =>
             const SizedBox(height: 8),
-        itemBuilder: (context, index) => Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Expanded(
-              child: Card(
-                elevation: 3,
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    children: <Widget>[
-                      const Text("Romaji"),
-                      const Divider(thickness: 3, color: Colors.blueAccent),
-                      Text(
-                        allPageController.dictionaryKanaList[index]["Spell"]
-                            .toString()
-                            .toUpperCase(),
-                        style: const TextStyle(
-                          fontSize: 32,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
+        itemBuilder: (context, index) => Card(
+          elevation: 3,
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              children: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: const <Widget>[
+                    Text("Romaji"),
+                    Text("Hiragana"),
+                    Text("Katakana"),
+                  ],
                 ),
-              ),
-            ),
-            Expanded(
-              child: Card(
-                elevation: 3,
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    children: <Widget>[
-                      const Text("Hiragana"),
-                      const Divider(thickness: 3, color: Colors.blueAccent),
-                      Text(
-                        const KanaKit()
-                            .toHiragana(allPageController
-                                .dictionaryKanaList[index]["Spell"])
-                            .toString(),
-                        style: const TextStyle(
-                          fontSize: 32,
-                          fontWeight: FontWeight.bold,
-                        ),
+                const Divider(thickness: 3, color: Colors.blueAccent),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: <Widget>[
+                    Text(
+                      allPageController.dictionaryKanaList[index]["Spell"]
+                          .toString()
+                          .toUpperCase(),
+                      style: const TextStyle(
+                        fontSize: 32,
+                        fontWeight: FontWeight.bold,
                       ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            Expanded(
-              child: Card(
-                elevation: 3,
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    children: <Widget>[
-                      const Text("Katakana"),
-                      const Divider(thickness: 3, color: Colors.blueAccent),
-                      Text(
-                        const KanaKit()
-                            .toKatakana(allPageController
-                                .dictionaryKanaList[index]["Spell"])
-                            .toString(),
-                        style: const TextStyle(
-                          fontSize: 32,
-                          fontWeight: FontWeight.bold,
-                        ),
+                    ),
+                    Text(
+                      const KanaKit()
+                          .toHiragana(allPageController
+                              .dictionaryKanaList[index]["Spell"])
+                          .toString(),
+                      style: const TextStyle(
+                        fontSize: 32,
+                        fontWeight: FontWeight.bold,
                       ),
-                    ],
-                  ),
+                    ),
+                    Text(
+                      const KanaKit()
+                          .toKatakana(allPageController
+                              .dictionaryKanaList[index]["Spell"])
+                          .toString(),
+                      style: const TextStyle(
+                        fontSize: 32,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
                 ),
-              ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
